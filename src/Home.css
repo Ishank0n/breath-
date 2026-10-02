@@ -1,0 +1,335 @@
+@import url('https://fonts.googleapis.com/css2?family=Josefin+Sans:wght@200;300;400;600&display=swap');
+
+/* Needed so the button border can rotate smoothly */
+@property --angle {
+  syntax: '<angle>';
+  initial-value: 0deg;
+  inherits: false;
+}
+
+:root {
+  --night: #0c1f22;
+  --deep-teal: #14363a;
+  --mist: #e9f3ee;
+  --leaf: #7fd1a8;
+  --lagoon: #5fb7c9;
+  --dusk: #8f8cf0;
+  --neon-green: #39ff88;
+  --ultramarine: #2f55ff;
+}
+
+* {
+  box-sizing: border-box;
+  margin: 0;
+}
+
+html,
+body {
+  min-height: 100%;
+}
+
+body {
+  font-family: 'Josefin Sans', sans-serif;
+  color: var(--mist);
+  background: var(--night);
+  overflow-x: hidden;
+}
+
+/* ---------- Background: slow aurora + drifting light ---------- */
+
+/* Aurora washes that slowly shift */
+body::before {
+  content: '';
+  position: fixed;
+  inset: -20%;
+  z-index: 0;
+  background:
+    radial-gradient(40% 35% at 20% 25%, rgba(127, 209, 168, 0.35), transparent 70%),
+    radial-gradient(45% 40% at 80% 30%, rgba(143, 140, 240, 0.30), transparent 70%),
+    radial-gradient(50% 45% at 55% 85%, rgba(95, 183, 201, 0.32), transparent 70%),
+    linear-gradient(160deg, var(--night), var(--deep-teal));
+  animation: aurora 26s ease-in-out infinite alternate;
+}
+
+/* Tiny fireflies rising upward */
+body::after {
+  content: '';
+  position: fixed;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+  background-image:
+    radial-gradient(circle, rgba(233, 243, 238, 0.9) 0 1.5px, transparent 2px),
+    radial-gradient(circle, rgba(127, 209, 168, 0.8) 0 1.5px, transparent 2px),
+    radial-gradient(circle, rgba(233, 243, 238, 0.6) 0 1px, transparent 1.5px);
+  background-size: 180px 220px, 260px 300px, 120px 160px;
+  background-position: 0 0, 60px 90px, 30px 40px;
+  opacity: 0.55;
+  animation: rise 60s linear infinite;
+}
+
+/* Large soft orbs floating behind the content */
+section::before,
+section::after {
+  content: '';
+  position: fixed;
+  z-index: 0;
+  border-radius: 50%;
+  filter: blur(60px);
+  pointer-events: none;
+}
+
+section::before {
+  width: 38vmax;
+  height: 38vmax;
+  top: -10vmax;
+  left: -8vmax;
+  background: radial-gradient(circle, rgba(127, 209, 168, 0.45), transparent 65%);
+  animation: float-a 22s ease-in-out infinite alternate;
+}
+
+section::after {
+  width: 34vmax;
+  height: 34vmax;
+  bottom: -12vmax;
+  right: -8vmax;
+  background: radial-gradient(circle, rgba(143, 140, 240, 0.45), transparent 65%);
+  animation: float-b 28s ease-in-out infinite alternate;
+}
+
+/* ---------- Layout ---------- */
+
+section {
+  position: relative;
+  min-height: 100vh;
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 230px));
+  grid-template-rows: auto auto;
+  justify-content: center;
+  align-content: center;
+  gap: 4rem 1.75rem;
+  padding: 2rem;
+}
+
+.header,
+.plants,
+.space {
+  position: relative;
+  z-index: 1;
+}
+
+.header {
+  grid-column: 1 / -1;
+  text-align: center;
+  padding: 3rem 0 1rem;
+}
+
+/* A ring that slowly expands and contracts, like a breath */
+.header::before {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 260px;
+  height: 260px;
+  margin: -130px 0 0 -130px;
+  border-radius: 50%;
+  border: 1px solid rgba(127, 209, 168, 0.55);
+  background: radial-gradient(circle, rgba(127, 209, 168, 0.18), transparent 70%);
+  box-shadow: 0 0 60px rgba(127, 209, 168, 0.25);
+  animation: breathe 9s ease-in-out infinite;
+  z-index: -1;
+}
+
+.header h1 {
+  font-size: clamp(3.2rem, 9vw, 5.5rem);
+  font-weight: 200;
+  letter-spacing: 0.14em;
+  background: linear-gradient(120deg, #ffffff 20%, var(--leaf) 55%, var(--lagoon) 80%);
+  background-size: 200% auto;
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  color: transparent;
+  animation: shimmer 10s ease-in-out infinite alternate;
+}
+
+/* Remove this block if you don't want the tagline */
+.header::after {
+  content: 'Pause. Breathe. Grow.';
+  display: block;
+  margin-top: 0.9rem;
+  font-weight: 300;
+  font-size: 1.05rem;
+  letter-spacing: 0.3em;
+  color: rgba(233, 243, 238, 0.7);
+}
+
+/* ---------- Buttons ---------- */
+
+.plants,
+.space {
+  display: flex;
+}
+
+.plants button,
+.space button {
+  --accent: var(--neon-green);
+  --angle: 0deg;
+
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 0.9rem;
+  min-height: 170px;
+  padding: 1.6rem 1rem;
+
+  font-family: 'Josefin Sans', sans-serif;
+  font-size: 1.35rem;
+  font-weight: 400;
+  letter-spacing: 0.12em;
+  color: var(--mist);
+  cursor: pointer;
+
+  /* Frosted glass fill + animated glowing border */
+  border: 2px solid transparent;
+  border-radius: 28px;
+  background:
+    linear-gradient(160deg, rgba(20, 54, 58, 0.85), rgba(12, 31, 34, 0.9)) padding-box,
+    conic-gradient(from var(--angle), var(--accent), transparent 30%, var(--accent) 55%, transparent 80%, var(--accent)) border-box;
+  backdrop-filter: blur(10px);
+  box-shadow:
+    0 0 28px color-mix(in srgb, var(--accent) 35%, transparent),
+    0 18px 40px rgba(0, 0, 0, 0.35);
+
+  animation: spin-border 8s linear infinite, bob 6s ease-in-out infinite;
+  transition: transform 0.4s ease, box-shadow 0.4s ease, color 0.4s ease;
+}
+
+.space button {
+  --accent: var(--ultramarine);
+  animation-delay: 0s, -3s; /* offset the bobbing so they move out of sync */
+}
+
+/* Icon above each label */
+.plants button::before,
+.space button::before {
+  display: grid;
+  place-items: center;
+  width: 64px;
+  height: 64px;
+  font-size: 1.9rem;
+  border-radius: 50%;
+  background: radial-gradient(circle, color-mix(in srgb, var(--accent) 35%, transparent), transparent 75%);
+  transition: transform 0.4s ease;
+}
+
+.plants button::before {
+  content: '🌿';
+}
+
+.space button::before {
+  content: '🌙';
+}
+
+.plants button:hover,
+.space button:hover {
+  transform: translateY(-8px) scale(1.04);
+  color: #ffffff;
+  box-shadow:
+    0 0 50px color-mix(in srgb, var(--accent) 60%, transparent),
+    0 26px 50px rgba(0, 0, 0, 0.4);
+  animation-play-state: running, paused;
+}
+
+.plants button:hover::before,
+.space button:hover::before {
+  transform: scale(1.15);
+}
+
+.plants button:active,
+.space button:active {
+  transform: translateY(-2px) scale(0.99);
+}
+
+.plants button:focus-visible,
+.space button:focus-visible {
+  outline: 2px solid var(--mist);
+  outline-offset: 5px;
+}
+
+/* ---------- Keyframes ---------- */
+
+@keyframes aurora {
+  0%   { transform: translate3d(0, 0, 0) rotate(0deg) scale(1); }
+  100% { transform: translate3d(3%, -4%, 0) rotate(8deg) scale(1.1); }
+}
+
+@keyframes rise {
+  from { background-position: 0 0, 60px 90px, 30px 40px; }
+  to   { background-position: 40px -1200px, 20px -1800px, 80px -900px; }
+}
+
+@keyframes float-a {
+  from { transform: translate(0, 0) scale(1); }
+  to   { transform: translate(12vmax, 10vmax) scale(1.2); }
+}
+
+@keyframes float-b {
+  from { transform: translate(0, 0) scale(1.1); }
+  to   { transform: translate(-12vmax, -8vmax) scale(0.9); }
+}
+
+@keyframes breathe {
+  0%, 100% { transform: scale(0.8); opacity: 0.5; }
+  50%      { transform: scale(1.35); opacity: 1; }
+}
+
+@keyframes shimmer {
+  from { background-position: 0% center; }
+  to   { background-position: 100% center; }
+}
+
+@keyframes spin-border {
+  to { --angle: 360deg; }
+}
+
+@keyframes bob {
+  0%, 100% { transform: translateY(0); }
+  50%      { transform: translateY(-6px); }
+}
+
+/* ---------- Small screens ---------- */
+
+@media (max-width: 480px) {
+  section {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 3rem 1rem;
+    padding: 1.5rem 1rem;
+  }
+
+  .header::before {
+    width: 200px;
+    height: 200px;
+    margin: -100px 0 0 -100px;
+  }
+
+  .plants button,
+  .space button {
+    min-height: 140px;
+    font-size: 1.1rem;
+  }
+}
+
+/* ---------- Respect reduced-motion settings ---------- */
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation: none !important;
+    transition: none !important;
+  }
+}
